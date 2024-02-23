@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<sub-flow name="postimplementation" doc:id="13eaf12c-6c85-48b2-ae3a-7c3f3812d943" >
+		<logger level="INFO" doc:name="flow started" doc:id="99f54798-31bc-4a06-bc31-775a2e4b58ad" message='#["flow started"]'/>
+		<ee:transform doc:name="input payload" doc:id="2c85e006-072c-4e8f-a43c-56d8c66aff1d" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<db:insert doc:name="Insert" doc:id="f91b3122-40d3-4f05-a4b2-9ca1009875f1" config-ref="Database_Config">
+			<db:sql><![CDATA[Insert into orders (code,orderid,ordername,orderdate,orderprice,orderqt) values (:code,:orderid,:ordername,:orderdate,:orderprice,:orderqt)]]></db:sql>
+			<db:input-parameters><![CDATA[#[{
+	'code': payload.code,
+	'orderid': payload.orderid,
+	'ordername': payload.ordername,
+	'orderdate': payload.orderdate,
+	'orderprice': payload.orderprice,
+	'orderqt': payload.orderqt
+}]]]></db:input-parameters>
+		</db:insert>
+		<logger level="INFO" doc:name="inserted successfully" doc:id="29a4a0e4-1d75-43ba-a00b-78171c59ed5b" message='#["inserted successfully"]'/>
+		<logger level="INFO" doc:name="flow completed" doc:id="3af2f960-f882-49f7-a278-b8b58d9c75e0" message='#["flow completed"]'/>
+	</sub-flow>
+	<sub-flow name="patchimplementation" doc:id="af42f528-dad6-41ef-9ae5-7824b1d48a93" >
+		<logger level="INFO" doc:name="flow started" doc:id="5a0c969c-2784-4c89-a2c1-a121c9e03e38" message='#["flow started"]'/>
+		<ee:transform doc:name="input payload" doc:id="bb6a08e8-a37d-41fd-aa54-9cbbef7c5f9c" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<db:update doc:name="Update" doc:id="c1c57f26-1fa9-446d-ba70-a757f423953d" config-ref="Database_Config">
+			<db:sql><![CDATA[update orders set code = :code, orderprice = :orderprice where orderid = :orderid
+]]></db:sql>
+			<db:input-parameters><![CDATA[#[{
+	"code":payload.code,
+	"orderprice":payload.orderprice,
+	"orderid":payload.orderid
+
+
+}]]]></db:input-parameters>
+		</db:update>
+		<logger level="INFO" doc:name="updated successfully" doc:id="2a81dd0b-9394-4302-9d11-aecb09da1c7e" message='#["updated successfully"]'/>
+		<logger level="INFO" doc:name="flow completed" doc:id="ee19a224-ce8e-413c-bf8d-1ed8627f2f18" message='#["flow completed"]'/>
+	</sub-flow>
+	<sub-flow name="getimplementation" doc:id="2d2ba502-a4a1-4e59-81e4-74eb1dd2373d" >
+		<logger level="INFO" doc:name="flow started" doc:id="f6630eba-88c0-4395-9a3a-102234f6ba71" message='#["flow started"]'/>
+		<db:select doc:name="Select" doc:id="a9704f6e-cedf-47f9-acdb-d525fdbb2fc9" config-ref="Database_Config">
+			<db:sql ><![CDATA[select * from orders]]></db:sql>
+		</db:select>
+		<ee:transform doc:name="database response" doc:id="64534d5e-ad3a-445d-b00b-1a80de13bd5d" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload map{
+	code: $.code,
+    orderid: $.orderid,
+    ordername: $.ordername,
+    orderdate: $.orderdate,
+    orderprice: $.orderprice,
+    orderqt: $.orderqt
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="printing payload" doc:id="4f39cfaa-8aa2-4f9f-9c30-b2eb2fa2689b" message="#[payload]"/>
+	</sub-flow>
+	<sub-flow name="deleteimplementation" doc:id="3b56e8b2-3192-499e-8e85-0215f739d28a" >
+		<logger level="INFO" doc:name="flow started" doc:id="478cc26d-6fde-44da-a4fa-ac4d71b0390a" message='#["flow started"]'/>
+		<ee:transform doc:name="input payload" doc:id="33b936bb-0309-4dbd-87a0-53c79bf7059e" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<db:delete doc:name="Delete" doc:id="291ab084-495c-4004-934f-9dcc0beb4fe7" config-ref="Database_Config">
+				<db:sql><![CDATA[DELETE FROM orders WHERE orderid =:orderid]]></db:sql>
+				<db:input-parameters><![CDATA[#[{
+ 'orderid':payload.orderid
+}]]]></db:input-parameters>
+			</db:delete>
+		<logger level="INFO" doc:name="flow completed" doc:id="f78720aa-2946-4d0a-b7f1-39bc8556ba72" message='#["flow completed"]'/>
+	</sub-flow>
+</mule>

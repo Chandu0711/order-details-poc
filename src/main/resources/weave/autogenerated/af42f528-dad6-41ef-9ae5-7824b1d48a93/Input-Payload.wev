@@ -1,0 +1,8 @@
+%dw 2.0
+
+type auto_af42f528_dad6_41ef_9ae5_7824b1d48a93_Input_Payload = {
+  code: String, 
+  orderprice: Number, 
+  _?: Any
+}
+

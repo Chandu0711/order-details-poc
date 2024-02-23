@@ -1,0 +1,60 @@
+#%RAML 1.0
+title: orders-sysapi
+version: v1.1
+description: order details apis
+mediaType: [application/json]
+securitySchemes:
+  customsecurity: !include securityScheme.raml
+securedBy: [customsecurity]
+ 
+traits:
+  error-handling: !include errorhandlingtrait.raml
+  
+/order:
+  post:
+    is: [error-handling]
+    description: to insert order details in db
+    body:
+      application/json:
+        type: !include datatypes/requestdatatypes/postrequestdataType.raml
+        example: !include examples/requestexamples/postrequestexamplefile.json
+    responses:
+          200:
+            body:
+              application/json:
+                type: !include datatypes/responsedatatypes/postresponsedataType.raml
+                example: !include examples/responseexamples/postresponseexamplefile.json
+ 
+  patch:
+    is: [error-handling]
+    description: To update the order details    
+    body:
+      application/json:
+         type: !include datatypes/requestdatatypes/putrequestdataType.raml
+         example: !include examples/requestexamples/putrequestexamplefile.json
+    responses:
+      201:
+        body:
+          application/json:
+            type: !include datatypes/responsedatatypes/putresponsedataType.raml
+            example: !include examples/responseexamples/putresponseexamplefile.json
+  
+  get:
+    is: [error-handling]
+    description: to fetch the order details.
+    responses:
+      200:
+        body:
+          application/json:
+            type: !include datatypes/responsedatatypes/getresponsedataType.raml
+            example: !include examples/responseexamples/getresponseexamplefile.json
+ 
+  delete:
+    is: [error-handling]   
+    description: to delete the order details.
+    responses:
+          200:
+            body:
+              application/json:
+                type: !include datatypes/responsedatatypes/deleteresponsedataType.raml
+                example: !include examples/responseexamples/deleteresponseexamplefile.json

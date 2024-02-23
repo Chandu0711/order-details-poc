@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="orders-sysapi-test-suite.xml" />
+	<munit:test name="api-bad-request-testsuite" doc:id="ac433421-4f5c-4f18-856d-714d59efbfb1" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="0dfeaa51-eff9-4ce8-8c4d-5bb539a184d7" processor="apikit:router">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="orders-sysapi-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<try doc:name="Try" doc:id="f4b4dec6-3d52-41de-b180-af6f50aecdba" >
+				<flow-ref doc:name="Flow-ref to orders-sysapi-main" doc:id="d6505a85-27b6-4422-a6f8-2e69cf57627c" name="orders-sysapi-main" />
+				<error-handler >
+					<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="c4073625-2cbf-4ce2-8789-317b63ae0658" >
+						<logger level="INFO" doc:name="Logger" doc:id="4bbd0521-f86b-4d46-8a10-c1262791061d" message="Test"/>
+					</on-error-continue>
+				</error-handler>
+			</try>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="2c810524-0d98-40d7-be0f-4bb2f9979a7c" is="#[MunitTools::notNullValue()]" expression="#[payload]"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="orders-sysapi-test-suite-post:\order:application\json:orders-sysapi-configTest" doc:id="eaed0cd5-d252-4f6f-89c4-fcb7bfc00906" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="96ac599a-0048-40eb-bd69-744ee2980760" processor="sub-flow">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="13eaf12c-6c85-48b2-ae3a-7c3f3812d943" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value='#[{&#10;  status: "success",&#10;  message: "data inserted successfully"&#10;	&#10;}]' />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="511af995-1aba-4c6a-96d3-02e486c258e0" >
+				<munit:payload value='#[{&#10;	"code":"ASW",&#10;    "orderid":"123",&#10;    "ordername":"pen",&#10;    "orderdate":"12-12-2021",&#10;    "orderprice":"ten",&#10;    "orderqt":23&#10;}]' />
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to post:\order:application\json:orders-sysapi-config" doc:id="b96ce055-941c-4012-aca3-9500815133a8" name="post:\order:application\json:orders-sysapi-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="d193e26c-fa72-4fd2-8373-779828fcfc75" is="#[MunitTools::notNullValue()]" expression="#[payload]"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="orders-sysapi-test-suite-get:\order:orders-sysapi-configTest" doc:id="2eea6f4a-e67b-45f4-940f-043e2c143ff0" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="156711c0-a0ae-4a4f-9da7-53200bf1e817" processor="sub-flow">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="2d2ba502-a4a1-4e59-81e4-74eb1dd2373d" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value='#[[{&#10;	"code":"ASW",&#10;    "orderid":"123",&#10;    "ordername":"pen",&#10;    "orderdate":"12-12-2021",&#10;    "orderprice":"ten",&#10;    "orderqt":23&#10;}]]' />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to get:\order:orders-sysapi-config" doc:id="4fec8b7e-aa7f-41ea-8239-e0b0fa7606fe" name="get:\order:orders-sysapi-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="8561c6f4-672f-4d91-a5c5-b0f4c6f8863d" is="#[MunitTools::notNullValue()]" expression="#[payload]"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="orders-sysapi-test-suite-delete:\order:orders-sysapi-configTest" doc:id="af9e0238-132b-4771-b626-6ff1b2ec6cb4" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="68be9573-00d9-4fb7-b097-2eac2fa28313" processor="sub-flow">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="3b56e8b2-3192-499e-8e85-0215f739d28a" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value='#[{&#10;  status: "success",&#10;  message: "data deleted successfully"&#10;}]' />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="aeb8d514-53f9-44f8-b16b-dc4e2212f371" >
+				<munit:payload value='#[{&#10;	"orderid":123&#10;}]' />
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to delete:\order:orders-sysapi-config" doc:id="bf5d85d0-5355-4b4e-8916-d9f4bb4e75f8" name="delete:\order:orders-sysapi-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="8de3eca0-74ef-4739-a922-cf55c049d882" is="#[MunitTools::notNullValue()]" expression="#[payload]"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="orders-sysapi-test-suite-patch:\order:application\json:orders-sysapi-configTest" doc:id="7f2990bf-d6f3-4aae-8849-dff43d1160b8" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="e1e10e3e-a1a4-4279-8fae-6b223e39cdf7" processor="sub-flow">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="af42f528-dad6-41ef-9ae5-7824b1d48a93" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value='#[{&#10;  status: "success",&#10;  message: "data updated successfully"&#10;}]' />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="2fbcb21f-6e32-408d-a69b-ee012cbf1487" >
+				<munit:payload value='#[{&#10;	"code":"ASW",&#10;	"orderprice":"ten",&#10;	"orderid":234&#10;}]' />
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to patch:\order:application\json:orders-sysapi-config" doc:id="eaa2f5ea-5d46-4c6f-9aa1-2da72c0619ec" name="patch:\order:application\json:orders-sysapi-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="a1249e40-ceaf-4823-bc1e-3c98cf24109f" is="#[MunitTools::notNullValue()]" expression="#[payload]"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="orders-sysapi-test-suite-orders-sysapi-consoleTest" doc:id="39f6e040-d122-4bc7-a310-f9e68d9dfbea" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="9d57f527-415f-46fa-b07b-d0e2af11d46c" processor="apikit:console">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="orders-sysapi-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<try doc:name="Try" doc:id="8bf30975-823c-4c25-94fc-238ac410f273" >
+				<flow-ref doc:name="Flow-ref to orders-sysapi-console" doc:id="a59741ef-19c7-4e0b-89af-caf3c59c5f38" name="orders-sysapi-console" />
+				<error-handler >
+					<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="68ef24c0-515f-4ab1-a03f-3d64ee4e638e" >
+						<logger level="INFO" doc:name="Logger" doc:id="59ebd927-dbe6-4004-a583-e3127280385b" message="test"/>
+					</on-error-continue>
+				</error-handler>
+			</try>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="c50bdd8f-cf36-4c98-a1ac-8563f219155d" expression="#[payload]" is="#[MunitTools::notNullValue()]"/>
+		</munit:validation>
+	</munit:test>
+
+
+</mule>

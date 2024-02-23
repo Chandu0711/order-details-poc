@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:api-gateway="http://www.mulesoft.org/schema/mule/api-gateway" xmlns:email="http://www.mulesoft.org/schema/mule/email"
+	xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties" xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:file="http://www.mulesoft.org/schema/mule/file" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd
+http://www.mulesoft.org/schema/mule/email http://www.mulesoft.org/schema/mule/email/current/mule-email.xsd
+http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/mule/api-gateway/current/mule-api-gateway.xsd">
+	<configuration-properties doc:name="Configuration properties" doc:id="b0909aac-f4e0-47f0-8d5a-6f8154fdde86" file="env/${mule.env}.yaml" />
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="8ad35f8a-bc2b-4749-9038-a8eb111a90e9" >
+		<http:listener-connection host="${httpListener.host}" port="${httpListener.port}" readTimeout="${httpListener.readTimeout}" />
+	</http:listener-config>
+	<apikit:config outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" doc:name="Router" doc:id="fa017cf5-94a2-4868-86fa-fd39b208195a" name="orders-sysapi-config" api="orders-sysapi.raml" />
+	<global-property doc:name="Global Property" doc:id="79355310-79b5-48fc-9150-46000a1605f1" name="mule.env" value="muleproperties" />
+	<db:config name="Database_Config" doc:name="Database Config" doc:id="6c74a156-efb7-41c8-9054-ab8e81649ce9" >
+		<db:my-sql-connection host="${dataBase.host}" port="${dataBase.port}" user="${secure::dataBase.user}" password="${secure::dataBase.password}" database="${dataBase.dbSchema}"/>
+	</db:config>
+	<secure-properties:config name="Secure_Properties_Config" doc:name="Secure Properties Config" doc:id="fb60e938-a57f-4f17-af22-4744e0406fa7" key="9398648659112233" file="env/secure-${mule.env}.yaml"/>
+	<api-gateway:autodiscovery apiId="19314214" ignoreBasePath="true" doc:name="API Autodiscovery" doc:id="c7be31fc-147b-410c-a372-d9a38612375f" flowRef="orders-sysapi-main" />
+</mule>

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="   http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd   http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd   http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="errorhandling-test-suite.xml"/>
+	<munit:test doc:id="7b0ff59a-95fd-496a-b7af-873b3cbfbdab" name="new-test-suiteTest">
+		<munit:behavior>
+			<munit-tools:mock-when doc:id="603c8679-d9aa-421e-b51b-c6056ac68484" doc:name="Mock when" processor="apikit:router">
+				<munit-tools:with-attributes>
+					<munit-tools:with-attribute attributeName="config-ref" whereValue="orders-sysapi-config"/>
+				</munit-tools:with-attributes>
+				<munit-tools:then-return>
+					<munit-tools:error typeId="APIKIT:BAD_REQUEST"/>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<flow-ref doc:id="2feaa5a9-f6e2-4e0e-a2e4-151184863de1" doc:name="Flow Reference" name="orders-sysapi-main"/>
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-that doc:id="73e84d03-857d-41b0-aa82-6f7168d09782" doc:name="Assert that" expression="#[payload]" is="#[MunitTools::notNullValue()]"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test doc:id="36d03558-d977-47d7-af3b-c4fdcc22553a" name="new-test-suiteTest1">
+		<munit:behavior>
+			<munit-tools:mock-when doc:id="56fc43fe-371e-459f-82f8-035425bfc510" doc:name="Mock when" processor="apikit:router">
+				<munit-tools:with-attributes>
+					<munit-tools:with-attribute attributeName="config-ref" whereValue="orders-sysapi-config"/>
+				</munit-tools:with-attributes>
+				<munit-tools:then-return>
+					<munit-tools:error typeId="APIKIT:NOT_FOUND"/>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<flow-ref doc:id="a52ef6c7-67fc-4a2b-bbbf-a154b21c86cc" doc:name="Flow Reference" name="orders-sysapi-main"/>
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-that doc:id="26f89901-19f9-4444-88cb-4c3f997ada24" doc:name="Assert that" expression="#[payload]" is="#[MunitTools::notNullValue()]"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test doc:id="298f83db-c41a-4c80-a5dc-b5890bd3e9b6" name="new-test-suiteTest2">
+		<munit:behavior>
+			<munit-tools:mock-when doc:id="3262b021-b0c9-4c61-9dfb-5f39ec786385" doc:name="Mock when" processor="apikit:router">
+				<munit-tools:with-attributes>
+					<munit-tools:with-attribute attributeName="config-ref" whereValue="orders-sysapi-config"/>
+				</munit-tools:with-attributes>
+				<munit-tools:then-return>
+					<munit-tools:error typeId="APIKIT:METHOD_NOT_ALLOWED"/>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<flow-ref doc:id="c905b4a6-dc7e-48e9-8e35-2bcc183aa7c4" doc:name="Flow Reference" name="orders-sysapi-main"/>
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-that doc:id="e1c03356-29af-41fe-89fc-a83f43a5fdbe" doc:name="Assert that" expression="#[payload]" is="#[MunitTools::notNullValue()]"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test doc:id="4a842218-1167-4bad-b635-d10513a6bef0" name="new-test-suiteTest3">
+		<munit:behavior>
+			<munit-tools:mock-when doc:id="c56e46ed-d594-4876-910e-8bc69175f87c" doc:name="Mock when" processor="apikit:router">
+				<munit-tools:with-attributes>
+					<munit-tools:with-attribute attributeName="config-ref" whereValue="orders-sysapi-config"/>
+				</munit-tools:with-attributes>
+				<munit-tools:then-return>
+					<munit-tools:error typeId="APIKIT:NOT_ACCEPTABLE"/>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<flow-ref doc:id="da8a1a58-0397-4b29-98de-7ed61a7ebdec" doc:name="Flow Reference" name="orders-sysapi-main"/>
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-that doc:id="cacff675-918e-412f-9196-bc82eae0e1c8" doc:name="Assert that" expression="#[payload]" is="#[MunitTools::notNullValue()]"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test doc:id="7b4b0ccb-aca1-41aa-a43b-66a5df5b37dc" name="new-test-suiteTest4">
+		<munit:behavior>
+			<munit-tools:mock-when doc:id="5b043bac-e81f-479e-b391-02460ab40152" doc:name="Mock when" processor="apikit:router">
+				<munit-tools:with-attributes>
+					<munit-tools:with-attribute attributeName="config-ref" whereValue="orders-sysapi-config"/>
+				</munit-tools:with-attributes>
+				<munit-tools:then-return>
+					<munit-tools:error typeId="APIKIT:UNSUPPORTED_MEDIA_TYPE"/>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<flow-ref doc:id="9b7b1f38-c7ed-4be6-a32d-9a63ccd74e51" doc:name="Flow Reference" name="orders-sysapi-main"/>
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-that doc:id="dc7dfc02-b13f-4c60-9584-9f33d3fc6a2c" doc:name="Assert that" expression="#[payload]" is="#[MunitTools::notNullValue()]"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test doc:id="b1a91aab-b0f8-41cd-9fdb-f6c15c34a000" name="new-test-suiteTest5">
+		<munit:behavior>
+			<munit-tools:mock-when doc:id="301247b9-87dd-441a-90fa-0e54bf79a1b3" doc:name="Mock when" processor="apikit:router">
+				<munit-tools:with-attributes>
+					<munit-tools:with-attribute attributeName="config-ref" whereValue="orders-sysapi-config"/>
+				</munit-tools:with-attributes>
+				<munit-tools:then-return>
+					<munit-tools:error typeId="APIKIT:NOT_IMPLEMENTED"/>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<flow-ref doc:id="817e787a-cc7f-4c27-9874-2e6757878a9d" doc:name="Flow Reference" name="orders-sysapi-main"/>
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-that doc:id="4f15fa01-bd14-4d26-ae23-441b61ed8fa1" doc:name="Assert that" expression="#[payload]" is="#[MunitTools::notNullValue()]"/>
+		</munit:validation>
+	</munit:test>
+
+
+</mule>
